@@ -4,7 +4,8 @@
     "config:recommended",
     "docker:pinDigests",
     "github>austlane/renovate-ansible-builder//ee-base_image",
-    "github>austlane/renovate-ansible-builder//ee-package_pip"
+    "github>austlane/renovate-ansible-builder//ee-package_pip",
+    "github>austlane/renovate-ansible-builder//ee-receptor"
   ],
   "packageRules": [
   ],
