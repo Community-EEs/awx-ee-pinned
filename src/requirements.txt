@@ -1,4 +1,4 @@
-git+https://github.com/ansible/ansible-sign
+ansible-sign
 ncclient
 paramiko
 pykerberos
