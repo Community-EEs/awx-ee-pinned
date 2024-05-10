@@ -30,6 +30,7 @@ jobs:
           echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u ${{ secrets.QUAY_USERNAME }} --password-stdin
 
       - name: Build and push image
+        working-directory: ./src
         run: |
           docker buildx create --name awx-ee-buildx
           docker buildx use awx-ee-buildx

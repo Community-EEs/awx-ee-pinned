@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:pinDigests",
+    "github>austlane/renovate-ansible-builder//ee-base_image",
+    "github>austlane/renovate-ansible-builder//ee-package_pip"
+  ],
+  "packageRules": [
+  ],
+  "customManagers": [
+  ]
+}
