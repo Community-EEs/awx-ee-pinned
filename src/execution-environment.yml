@@ -16,7 +16,7 @@ additional_build_steps:
   append_base:
     - RUN $PYCMD -m pip install -U pip
   append_final:
-    - ARG RECEPTOR_VERSION=v1.4.7@sha256:3e635ba7b80bb016a5445c15d96fb029d989091091e32d71d2625c706c901979
+    - ARG RECEPTOR_VERSION=v1.4.7
     - COPY --from=quay.io/ansible/receptor:${RECEPTOR_VERSION} /usr/bin/receptor /usr/bin/receptor
     - RUN mkdir -p /var/run/receptor
     - RUN git lfs install --system
