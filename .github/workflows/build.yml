@@ -58,7 +58,7 @@ jobs:
         run: ansible-builder create -v3 --context context --output-filename Dockerfile
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3
+        uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ./src/context/Dockerfile
           no-fail: true
