@@ -4,11 +4,12 @@ on:
   push:
     # build and push anytime commits are pushed/merged
     branches:
-      - devel-pinned
+      # - devel-pinned
       - feature-renovate
-  # schedule:
-  #   # build every 12 hours
-  #   - cron: '0 */12 * * *'
+  # release:
+  #   # build and push upon release creation
+  #   types:
+  #     - created
 
 env:
   REGISTRY: ghcr.io
@@ -27,14 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
