@@ -4,39 +4,85 @@ on:
   push:
     # build and push anytime commits are merged to devel
     branches:
-      - devel
+      - devel-pinned
+      - feature-renovate
   schedule:
     # build every 12 hours
     - cron: '0 */12 * * *'
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build_and_push_latest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: Build and push latest tag from devel and on new commits
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      - name: Quay login
-        run: |
-          echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u ${{ secrets.QUAY_USERNAME }} --password-stdin
+      - name: Docker Login GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # - name: Build and push image
+      #   working-directory: ./src
+      #   run: |
+      #     docker buildx create --name awx-ee-buildx
+      #     docker buildx use awx-ee-buildx
+      #     ansible-builder create -v3 --output-file=Dockerfile
+      #     docker buildx build \
+      #       --push \
+      #       --platform=linux/amd64,linux/arm64 \
+      #       --tag=${{ vars.IMAGE_REGISTRY }}/awx-ee:latest \
+      #       context
+
+      - name: ansible-builder create context
         working-directory: ./src
-        run: |
-          docker buildx create --name awx-ee-buildx
-          docker buildx use awx-ee-buildx
-          ansible-builder create -v3 --output-file=Dockerfile
-          docker buildx build \
-            --push \
-            --platform=linux/amd64,linux/arm64 \
-            --tag=${{ vars.IMAGE_REGISTRY }}/awx-ee:latest \
-            context
+        run: ansible-builder create -v3 --output-file=Dockerfile
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/context
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
