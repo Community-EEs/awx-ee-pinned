@@ -1,14 +1,14 @@
-name: Build and Push latest image
+name: Build and Push
 
 on:
   push:
-    # build and push anytime commits are merged to devel
+    # build and push anytime commits are pushed/merged
     branches:
       - devel-pinned
       - feature-renovate
-  schedule:
-    # build every 12 hours
-    - cron: '0 */12 * * *'
+  # schedule:
+  #   # build every 12 hours
+  #   - cron: '0 */12 * * *'
 
 env:
   REGISTRY: ghcr.io
@@ -17,7 +17,7 @@ env:
 jobs:
   build_and_push_latest:
     runs-on: ubuntu-22.04
-    name: Build and push latest tag from devel and on new commits
+    name: Build and push upon merge
     permissions:
       contents: read
       packages: write
@@ -54,18 +54,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      # - name: Build and push image
-      #   working-directory: ./src
-      #   run: |
-      #     docker buildx create --name awx-ee-buildx
-      #     docker buildx use awx-ee-buildx
-      #     ansible-builder create -v3 --output-file=Dockerfile
-      #     docker buildx build \
-      #       --push \
-      #       --platform=linux/amd64,linux/arm64 \
-      #       --tag=${{ vars.IMAGE_REGISTRY }}/awx-ee:latest \
-      #       context
 
       - name: ansible-builder create context
         working-directory: ./src
