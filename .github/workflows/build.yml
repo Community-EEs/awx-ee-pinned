@@ -57,11 +57,17 @@ jobs:
         working-directory: ./src
         run: ansible-builder create -v3 --context context --output-filename Dockerfile
 
-      - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
+      - name: Archive Dockerfile
+        uses: actions/upload-artifact@v4
         with:
-          dockerfile: ./src/context/Dockerfile
-          no-fail: true
+          name: Dockerfile
+          path: ./src/context/Dockerfile
+
+      # - name: Lint Dockerfile
+      #   uses: hadolint/hadolint-action@v3.1.0
+      #   with:
+      #     dockerfile: ./src/context/Dockerfile
+      #     no-fail: true
 
       - name: Build and push Docker image
         id: push
