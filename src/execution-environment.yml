@@ -18,7 +18,7 @@ additional_build_steps:
   append_final:
     - >-
       COPY
-      --from=quay.io/ansible/receptor:v1.4.7@sha256:3e635ba7b80bb016a5445c15d96fb029d989091091e32d71d2625c706c901979
+      --from=quay.io/ansible/receptor:v1.4.8@sha256:39cfed2650f8576e01d2dcd520f1f4edf76609d88e2978bed55c447ffc16285f
       /usr/bin/receptor /usr/bin/receptor
     - RUN mkdir -p /var/run/receptor
     - RUN git lfs install --system
