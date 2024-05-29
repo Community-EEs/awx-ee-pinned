@@ -2,7 +2,7 @@
 version: 3
 images:
   base_image:
-    name: quay.io/centos/centos:stream9@sha256:99af7711b5a7f203a33dfa554f7da52a1f0ab55a2552887c03db29e33f65159c
+    name: quay.io/centos/centos:stream9@sha256:63f6ab844b31c90712b04908e8b995d8fc9d2dab8d36b8fe729d8e186a07fd84
 dependencies:
   ansible_core:
     # Require minimum of 2.15 to get ansible-inventory --limit option
