@@ -13,7 +13,7 @@ collections:
   - name: openstack.cloud
     version: 2.2.0
   - name: community.vmware
-    version: 4.3.0
+    version: 4.4.0
   - name: ovirt.ovirt
     version: 3.2.0
   - name: kubernetes.core
