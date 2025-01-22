@@ -21,7 +21,7 @@ collections:
   - name: ansible.posix
     version: 1.5.4
   - name: ansible.windows
-    version: 2.3.0
+    version: 2.7.0
   - name: redhatinsights.insights
     version: 1.2.2
   - name: kubevirt.core
